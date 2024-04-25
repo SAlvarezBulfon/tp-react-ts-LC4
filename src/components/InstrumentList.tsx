@@ -1,27 +1,32 @@
-
+import React from 'react';
 import InstrumentCard from './InstrumentCard';
+import useSWR from 'swr';
+
 
 interface Instrument {
   id: string;
-  instrumento: string;
+  nombre: string;
   marca: string;
   modelo: string;
-  imagen: string;
+  imgURL: string;
   precio: string;
   costoEnvio: string;
   cantidadVendida: string;
   descripcion: string;
 }
 
-interface InstrumentListProps {
-  instruments: Instrument[];
-}
+const fetcher = (url: string) => fetch(url).then(res => res.json());
 
-const InstrumentList: React.FC<InstrumentListProps> = ({ instruments }) => {
+const InstrumentList: React.FC = () => {
+  const { data: instrumentos, error } = useSWR<Instrument[]>('http://localhost:8080/instrumentos/all', fetcher);
+
+  if (error) return <div>Error al cargar los instrumentos: {error}</div>;
+  if (!instrumentos) return <div>Cargando instrumentos...</div>;
+
   return (
     <div className="instrument-list">
-      {instruments.map((instrument) => (
-        <InstrumentCard key={instrument.id} instrument={instrument} />
+      {instrumentos.map((instrumento: Instrument) => (
+        <InstrumentCard key={instrumento.id} instrument={instrumento} />
       ))}
     </div>
   );

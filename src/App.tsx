@@ -1,10 +1,16 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import InstrumentList from './components/InstrumentList';
-import instrumentsData from './../instrumentos.json';
+import InstrumentDetails from './components/InstrumentDetails';
 
 const App: React.FC = () => {
   return (
     <div>
-      <InstrumentList instruments={instrumentsData.instrumentos} />
+      <Router>
+        <Routes>
+          <Route path="/" element={<InstrumentList />} />
+          <Route path="/instrumentos/:id" element={<InstrumentDetails />} />
+        </Routes>
+      </Router>
     </div>
   );
 };
